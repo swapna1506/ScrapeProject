@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="3" passed="3" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2023-04-22T22:51:43 CDT" name="Default suite" finished-at="2023-04-22T22:58:39 CDT" duration-ms="415918">
+    <groups>
+    </groups>
+    <test started-at="2023-04-22T22:51:43 CDT" name="Default test" finished-at="2023-04-22T22:58:39 CDT" duration-ms="415918">
+      <class name="scraping.HyperTension">
+        <test-method signature="LaunchBrowser()[pri:1, instance:scraping.HyperTension@4bafe935]" started-at="2023-04-22T22:51:43 CDT" name="LaunchBrowser" finished-at="2023-04-22T22:51:48 CDT" duration-ms="4919" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- LaunchBrowser -->
+        <test-method signature="recipes_search()[pri:2, instance:scraping.HyperTension@4bafe935]" started-at="2023-04-22T22:51:48 CDT" name="recipes_search" finished-at="2023-04-22T22:52:10 CDT" duration-ms="22020" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- recipes_search -->
+        <test-method signature="ScrapeRecipes_HyperTension()[pri:3, instance:scraping.HyperTension@4bafe935]" started-at="2023-04-22T22:52:10 CDT" name="ScrapeRecipes_HyperTension" finished-at="2023-04-22T22:58:39 CDT" duration-ms="388825" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ScrapeRecipes_HyperTension -->
+      </class> <!-- scraping.HyperTension -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
