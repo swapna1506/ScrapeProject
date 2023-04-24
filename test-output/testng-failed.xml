@@ -6,6 +6,8 @@
       <class name="ScrapeRecipes.scrapeTarlaDalal">
         <methods>
           <include name="lauch_website"/>
+          <include name="search_for_recipes_hypothyroidism"/>
+          <include name="search_for_recipes_hypertension"/>
           <include name="search_for_recipes_diabetes"/>
         </methods>
       </class> <!-- ScrapeRecipes.scrapeTarlaDalal -->
