@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="4" passed="4" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2023-04-24T00:21:15 CDT" name="Default suite" finished-at="2023-04-24T00:29:44 CDT" duration-ms="508341">
+    <groups>
+    </groups>
+    <test started-at="2023-04-24T00:21:15 CDT" name="Default test" finished-at="2023-04-24T00:29:44 CDT" duration-ms="508341">
+      <class name="ScrapeRecipes.scrapeTarlaDalal">
+        <test-method is-config="true" signature="lauch_website()[pri:0, instance:ScrapeRecipes.scrapeTarlaDalal@2a65fe7c]" started-at="2023-04-24T00:21:15 CDT" name="lauch_website" finished-at="2023-04-24T00:21:26 CDT" duration-ms="10365" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- lauch_website -->
+        <test-method signature="search_for_recipes_pcos()[pri:1, instance:ScrapeRecipes.scrapeTarlaDalal@2a65fe7c]" started-at="2023-04-24T00:21:26 CDT" name="search_for_recipes_pcos" finished-at="2023-04-24T00:23:41 CDT" duration-ms="135491" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- search_for_recipes_pcos -->
+        <test-method signature="search_for_recipes_hypothyroidism()[pri:2, instance:ScrapeRecipes.scrapeTarlaDalal@2a65fe7c]" started-at="2023-04-24T00:23:41 CDT" name="search_for_recipes_hypothyroidism" finished-at="2023-04-24T00:25:41 CDT" duration-ms="119401" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- search_for_recipes_hypothyroidism -->
+        <test-method signature="search_for_recipes_hypertension()[pri:3, instance:ScrapeRecipes.scrapeTarlaDalal@2a65fe7c]" started-at="2023-04-24T00:25:41 CDT" name="search_for_recipes_hypertension" finished-at="2023-04-24T00:27:40 CDT" duration-ms="118876" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- search_for_recipes_hypertension -->
+        <test-method signature="search_for_recipes_diabetes()[pri:4, instance:ScrapeRecipes.scrapeTarlaDalal@2a65fe7c]" started-at="2023-04-24T00:27:40 CDT" name="search_for_recipes_diabetes" finished-at="2023-04-24T00:29:44 CDT" duration-ms="124131" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- search_for_recipes_diabetes -->
+      </class> <!-- ScrapeRecipes.scrapeTarlaDalal -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
