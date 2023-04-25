@@ -10,9 +10,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 //import java.util.List;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -27,7 +30,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
-import utilities.Excel_Writer;
+
 
 //import com.google.common.collect.Table.Cell;
 
@@ -35,7 +38,15 @@ public class HyperTension {
 	
 	static WebDriver driver = new ChromeDriver();
 	static String eliminatedlist ;
+	static String allergylist ;
 	static List<String> list = new ArrayList<>();
+	//static List<String> alllist = new ArrayList<>();
+	static List<String> alllist = new ArrayList<>();
+	static List<String> to_addlist = new ArrayList<>();
+	static String Allergy_Name;
+	static int allergyflag;
+	//static String[] ingredientlist;
+	
 	
 @Test(priority=1)	
 public static void LaunchBrowser() throws IOException {
@@ -57,6 +68,7 @@ public static void LaunchBrowser() throws IOException {
 	
 	driver.findElement(By.id("ctl00_cntleftpanel_ttlhealthtree_tvTtlHealtht167")).click();
 	}
+@SuppressWarnings("unlikely-arg-type")
 @Test(priority=3)
 	public static void ScrapeRecipes_HyperTension() throws InterruptedException, IOException{
 	
@@ -74,12 +86,37 @@ public static void LaunchBrowser() throws IOException {
 	//	pages.click();
 	
 	 XSSFWorkbook workbook = new XSSFWorkbook();
-     XSSFSheet sheet = workbook.createSheet("Receipe List");
+     XSSFSheet sheet = workbook.createSheet("HyperTension");
      Row row = sheet.createRow(0);
+     CellStyle cellstyle = workbook.createCellStyle();
+     cellstyle.setWrapText(true);
      Cell cellRei = row.createCell(0);
      cellRei.setCellValue("Receipe Name");
      Cell cell = row.createCell(1);
-     cell.setCellValue("Ingredients");
+     cell.setCellValue("Recipe ID");
+     Cell cell1 = row.createCell(2);
+     sheet.autoSizeColumn(2);
+     cell1.setCellValue("Ingredients");
+     Cell cell2 = row.createCell(3);
+     cell2.setCellValue("Preparation Time");
+     Cell cell3 = row.createCell(4);
+     cell3.setCellValue("Cooking Time");
+     Cell cell4 = row.createCell(5);
+     
+     cell4.setCellValue("Preparation Method");
+     cell4.setCellStyle(cellstyle);
+
+	  CellRangeAddress cellRangeAddress = new CellRangeAddress(2, 2, 2, 3);
+	  sheet.addMergedRegion(cellRangeAddress);
+     Cell cell5 = row.createCell(6);
+     cell5.setCellValue("Nutrient Values");
+     Cell cell6 = row.createCell(7);
+     cell6.setCellValue("Recipe URL");
+     Cell cell7 = row.createCell(8);
+     cell7.setCellValue("Allergy Ingredients");
+     Cell cell8 = row.createCell(9);
+     cell8.setCellValue("Food Category");
+    
      int rowCount =1;
      
 	for(int i=1;i<size;i++) {
@@ -95,6 +132,7 @@ public static void LaunchBrowser() throws IOException {
 		int ingredientssize = RecIngredients.size();
 		
 		List<String> ingredientlist = new ArrayList<>();
+		
 		String  ingredientsString = "";
 		
 		for(int j=1;j<ingredientssize;j++) {
@@ -107,10 +145,7 @@ public static void LaunchBrowser() throws IOException {
 		
 		ingredientlist.add(ing);
 		
-		ingredientsString = ing + "/n" + ingredientsString ;
-		
-		
-	}
+		}
 		
 		if((!ingredientlist.contains(list))&&!ingredientlist.contains("salt")) {
 			row = sheet.createRow(rowCount);
@@ -118,43 +153,97 @@ public static void LaunchBrowser() throws IOException {
 			
 			String recipeName =driver.findElement(By.xpath("//span[@id = 'ctl00_cntrightpanel_lblRecipeName']")).getText();
 			row.createCell(0).setCellValue(recipeName);
+			sheet.autoSizeColumn(20);
 			System.out.println(k+" : "+recipeName);
 			System.out.println("   Ingredients:   ");
 			
-			row.createCell(1).setCellValue(ingredientsString);
+			row.createCell(2).setCellValue(ingredientlist.toString());
 			String PrepTime = driver.findElement(By.xpath("//div[@id = 'ctl00_cntrightpanel_pnlRecipeScale']/section/p[2]/time[1]")).getText();
-			System.out.println("Preparation Time: "+PrepTime);
+			
+			row.createCell(3).setCellValue(PrepTime);
 			String CookTime =driver.findElement(By.xpath("//div[@id = 'ctl00_cntrightpanel_pnlRecipeScale']/section/p[2]/time[2]")).getText();
-			System.out.println("Cooking Time : "+CookTime);
+			row.createCell(4).setCellValue(CookTime);
+			
 			String PrepMethod = driver.findElement(By.id("recipe_small_steps")).getText();
-			System.out.println("   Preparation Method : ");
-			System.out.println(PrepMethod);
-			System.out.println("Nutrient Values: ");
-			WebElement Nutrientvalues= driver.findElement(By.xpath("//table[@id = 'rcpnutrients']"));
-			if(Nutrientvalues.isDisplayed() ) {
-			String NutrientVal =Nutrientvalues.getText();
-			System.out.println(NutrientVal);
+			row.createCell(5).setCellValue(PrepMethod);
+			
+			String RecipeTags = "";
+            RecipeTags = driver.findElement(By.xpath("//div[@id='recipe_tags']")).getText();  
+			
+			try {
+			String Nutrientvalues= driver.findElement(By.xpath("//table[@id = 'rcpnutrients']")).getText();
+			//if(Nutrientvalues.isDisplayed() ) {
+			row.createCell(6).setCellValue(Nutrientvalues);
+
 			}
-			else {
-				System.out.println("Not Available");
-			}
+			catch(NoSuchElementException e)
+        	{
+        		e.printStackTrace();
+        	} 
+			
+			
+			
+			//}
+			
 			String strUrl = driver.getCurrentUrl();
-			System.out.println("Recipe Url :"+ strUrl);
+			row.createCell(7).setCellValue(strUrl);
+			
 			driver.navigate().back();
 			String recipeId = driver.findElement(By.xpath("//article[@itemprop = 'itemListElement'][" + i + "]/div[2]/span")).getText();
-			String[] trimmedText = recipeId.split(" ");
-			String str = trimmedText[1];
-
+			String[] trimmedText = recipeId.split("\n",2);
+			String str = trimmedText[0];
+           
+			String Id =str.replaceAll("[^0-9]", "");
+            row.createCell(1).setCellValue(Id);
+			   
+            System.out.println("Allergy Ingredients");
+            String[] array =new String[alllist.size()];
+            String[] arr = new String[ingredientlist.size()];
+    		for(int y =0;y<ingredientlist.size();y++) {
+    			arr[y] = ingredientlist.get(y);
+    		}
+    		 for (String x : arr)
+    	            System.out.print(x + " ");
+           for(String z :array)
+        		 System.out.println(z+" ");  
+            try {
+            
+            for(int m=0;m<alllist.size();m++) {
+      		  
+            String s1 =arr[m];
+      	  String s2 = array[m];
+            if(s1.contains(s2) ){
+            	 
+        	   Allergy_Name = array[m];
+        	 
+        	   row.createCell(8).setCellValue(Allergy_Name);
+               //System.out.println(Allergy_Name);
+               
+           
+          }
+           
+          } 
+            }
+            catch(NullPointerException e) {
+            	e.printStackTrace();
+            }
+            if((Allergy_Name).contains("egg")){
+            	row.createCell(9).setCellValue("Eggitarian");
+            	
+            }
+            else if(RecipeTags.toLowerCase().trim().contains("vegan")) {
+            	row.createCell(9).setCellValue("vegan")	;
+            	
+            }
+            else {
+            	row.createCell(9).setCellValue("Vegetarian");
+            }
+            System.out.println("****************************************");
 			
-			    System.out.println("Recipe# "+str);
-			    System.out.println("****************************************");
-				
+            
 			k++;
 			
-			
-			
 		}
-		
 		
 		else {
 			driver.navigate().back();
@@ -169,7 +258,7 @@ public static void LaunchBrowser() throws IOException {
      }
 	}
 
-
+@Test
 public static List<String> Eliminatedlist() throws InterruptedException, IOException {
 	
 	String strFilePath  = System.getProperty("user.dir") +
@@ -183,7 +272,7 @@ public static List<String> Eliminatedlist() throws InterruptedException, IOExcep
 		  if (row != null) {
 		    Cell cell = row.getCell(4);
 		    if (cell != null) {
-		  		   // System.out.println(cell.getStringCellValue());
+		  		  
 		    eliminatedlist=cell.getStringCellValue().toLowerCase();
 		    list.add(eliminatedlist);
 		      }
@@ -193,5 +282,36 @@ public static List<String> Eliminatedlist() throws InterruptedException, IOExcep
 	}
 	return list;
 	
+}
+@Test
+public static  List<String> Allergylist() throws InterruptedException,IOException {
+	String strFilePath1  = System.getProperty("user.dir") +
+			"/src/test/resources/Exceldata/Recipe-filters-ScrapperHackathon.xlsx";
+	String[] temp = new String[100];
+	int count=0;
+	File excelFile1 = new File(strFilePath1);
+	FileInputStream fis1 = new FileInputStream(excelFile1);
+	XSSFWorkbook workbook = new XSSFWorkbook(fis1);
+	XSSFSheet sheet1 = workbook.getSheetAt(2);
+	for (int rowIndex = 2; rowIndex <= sheet1.getLastRowNum(); rowIndex++) {
+		 Row row = sheet1.getRow(rowIndex);
+		  if (row != null) {
+		    Cell cell = row.getCell(1);
+		    if (cell != null) {
+		  		  // System.out.println(cell.getStringCellValue());
+		 //  alllist = new String[count];
+		  // for(int l =0;l<alllist.length;l++) {
+			//   alllist[l] = temp[l];
+		 //  }
+		    	allergylist= cell.getStringCellValue().toLowerCase();
+		    	alllist.add(allergylist);
+		     }
+		  
+	}
+		  
+	}
+	return alllist;
+		  
+
 }
 }
