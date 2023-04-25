@@ -6,6 +6,7 @@
       <class name="scraping.HyperTension">
         <methods>
           <include name="ScrapeRecipes_HyperTension"/>
+          <include name="Eliminatedlist"/>
         </methods>
       </class> <!-- scraping.HyperTension -->
     </classes>

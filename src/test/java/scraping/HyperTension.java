@@ -39,10 +39,12 @@ public class HyperTension {
 	static WebDriver driver = new ChromeDriver();
 	static String eliminatedlist ;
 	static String allergylist ;
+	static String toadd;
 	static List<String> list = new ArrayList<>();
 	//static List<String> alllist = new ArrayList<>();
 	static List<String> alllist = new ArrayList<>();
 	static List<String> to_addlist = new ArrayList<>();
+	
 	static String Allergy_Name;
 	static int allergyflag;
 	//static String[] ingredientlist;
@@ -81,9 +83,9 @@ public static void LaunchBrowser() throws IOException {
 	List<WebElement> NoOfPages = driver.findElements(By.xpath("//div[@id = 'pagination']/a"));
 	int number = NoOfPages.size();
 	int k=1;
-	//for(int x=1;x<=number;x++) {
-	//	WebElement pages = driver.findElement(By.xpath("//div[@id = 'pagination']/a[" + x + "]"));	
-	//	pages.click();
+	for(int x=1;x<=number;x++) {
+		WebElement pages = driver.findElement(By.xpath("//div[@id = 'pagination']/a[" + x + "]"));	
+		pages.click();
 	
 	 XSSFWorkbook workbook = new XSSFWorkbook();
      XSSFSheet sheet = workbook.createSheet("HyperTension");
@@ -146,6 +148,7 @@ public static void LaunchBrowser() throws IOException {
 		ingredientlist.add(ing);
 		
 		}
+		String Nutrientvalues=" ";
 		
 		if((!ingredientlist.contains(list))&&!ingredientlist.contains("salt")) {
 			row = sheet.createRow(rowCount);
@@ -169,17 +172,19 @@ public static void LaunchBrowser() throws IOException {
 			
 			String RecipeTags = "";
             RecipeTags = driver.findElement(By.xpath("//div[@id='recipe_tags']")).getText();  
-			
-			try {
-			String Nutrientvalues= driver.findElement(By.xpath("//table[@id = 'rcpnutrients']")).getText();
-			//if(Nutrientvalues.isDisplayed() ) {
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+            
+		WebElement	Nutrivalues = driver.findElement(By.xpath("//table[@id = 'rcpnutrients']"));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		if( driver.findElements(By.xpath("//table[@id = 'rcpnutrients']")).size()!=0) {
+			Nutrientvalues = Nutrivalues.getText();
 			row.createCell(6).setCellValue(Nutrientvalues);
 
 			}
-			catch(NoSuchElementException e)
-        	{
-        		e.printStackTrace();
-        	} 
+		else {
+			driver.navigate().back();
+		}
+			
 			
 			
 			
@@ -195,6 +200,7 @@ public static void LaunchBrowser() throws IOException {
            
 			String Id =str.replaceAll("[^0-9]", "");
             row.createCell(1).setCellValue(Id);
+          //  row.createCell(6).setCellValue(Nutrientvalues);
 			   
             System.out.println("Allergy Ingredients");
             String[] array =new String[alllist.size()];
@@ -202,30 +208,33 @@ public static void LaunchBrowser() throws IOException {
     		for(int y =0;y<ingredientlist.size();y++) {
     			arr[y] = ingredientlist.get(y);
     		}
-    		 for (String x : arr)
-    	            System.out.print(x + " ");
+    		 for (String s : arr)
+    	            System.out.print(s + " ");
            for(String z :array)
         		 System.out.println(z+" ");  
             try {
-            
+            outer1:
             for(int m=0;m<alllist.size();m++) {
       		  
             String s1 =arr[m];
       	  String s2 = array[m];
             if(s1.contains(s2) ){
-            	 
-        	   Allergy_Name = array[m];
+            	allergyflag =1; 
+        	   Allergy_Name = s2;
         	 
-        	   row.createCell(8).setCellValue(Allergy_Name);
-               //System.out.println(Allergy_Name);
+        	
                
-           
+           break outer1;
           }
            
           } 
             }
             catch(NullPointerException e) {
             	e.printStackTrace();
+            }
+            
+            if(allergyflag==1) {
+            	row.createCell(8).setCellValue(Allergy_Name);
             }
             if((Allergy_Name).contains("egg")){
             	row.createCell(9).setCellValue("Eggitarian");
@@ -251,22 +260,24 @@ public static void LaunchBrowser() throws IOException {
 		}
 		
 	}
-	//driver.navigate().back();
+	driver.navigate().back();
 	
-	 try (FileOutputStream outputStream = new FileOutputStream("JavaBooks.xlsx")) {
+	 try (FileOutputStream outputStream = new FileOutputStream("Scraping.xlsx")) {
          workbook.write(outputStream);
      }
 	}
+}
 
 @Test
-public static List<String> Eliminatedlist() throws InterruptedException, IOException {
+public static  void Eliminatedlist(String sheetname) throws InterruptedException, IOException {
 	
 	String strFilePath  = System.getProperty("user.dir") +
 			"/src/test/resources/Exceldata/eliminationlist.xlsx";
 	File excelFile = new File(strFilePath);
 	FileInputStream fis = new FileInputStream(excelFile);
 	XSSFWorkbook workbook = new XSSFWorkbook(fis);
-	XSSFSheet sheet = workbook.getSheetAt(0);
+	XSSFSheet sheet = workbook.getSheet(sheetname);
+	if(sheetname.contains("eliminatedlist")) {
 	for (int rowIndex = 3; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
 		 Row row = sheet.getRow(rowIndex);
 		  if (row != null) {
@@ -280,7 +291,26 @@ public static List<String> Eliminatedlist() throws InterruptedException, IOExcep
 		     }
 		  
 	}
-	return list;
+	
+	}
+	
+	if(sheetname.contains("toadd")) {
+		
+		for (int rowIndex = 3; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+			 Row row = sheet.getRow(rowIndex);
+			  if (row != null) {
+			    Cell cell = row.getCell(5);
+			    if (cell != null) {
+		
+		toadd = cell.getStringCellValue().toLowerCase();
+		to_addlist.add(toadd);
+		
+	}
+}
+		}
+		
+	}
+	
 	
 }
 @Test
